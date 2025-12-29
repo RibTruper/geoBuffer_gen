@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Default",
+    "to": [
+      64,
+      4
+    ]
+  },
+    {
+    "name": "Flood Laser Cannon",
+    "to": [
+      65,
+      4
+    ]
+  },
+    {
+    "name": "Kung Fu Laser Cannon",
+    "to": [
+      216,
+      4
+    ]
+  },
+      {
+    "name": "Nuclear Laser Cannon",
+    "to": [
+      1579,
+      4
+    ]
+  }
+]

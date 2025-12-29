@@ -1,0 +1,541 @@
+[
+  {
+    "name": "Default",
+    "to": [
+      24,
+      4
+    ]
+  },
+  {
+    "name": "Space Roller ",
+    "to": [
+      183,
+      4
+    ]
+  },
+  {
+    "name": "Christmas Roller",
+    "to": [
+      196,
+      4
+    ]
+  },
+  {
+    "name": "Reggae Roller",
+    "to": [
+      290,
+      4
+    ]
+  },
+  {
+    "name": "Street Roller",
+    "to": [
+      326,
+      4
+    ]
+  },
+  {
+    "name": "Ignite Roller",
+    "to": [
+      360,
+      4
+    ]
+  },
+  {
+    "name": "Varying Roller",
+    "to": [
+      368,
+      4
+    ]
+  },
+  {
+    "name": "Neon Roller",
+    "to": [
+      404,
+      4
+    ]
+  },
+  {
+    "name": "World Cup Roller",
+    "to": [
+      469,
+      4
+    ]
+  },
+  {
+    "name": "Alone Light Roller",
+    "to": [
+      473,
+      4
+    ]
+  },
+  {
+    "name": "Clock Roller",
+    "to": [
+      520,
+      4
+    ]
+  },
+  {
+    "name": "Birthday Roller",
+    "to": [
+      525,
+      4
+    ]
+  },
+  {
+    "name": "Marshmello Roller",
+    "to": [
+      593,
+      4
+    ]
+  },
+  {
+    "name": "Spectre Roller",
+    "to": [
+      623,
+      4
+    ]
+  },
+  {
+    "name": "Super Bowl Roller",
+    "to": [
+      640,
+      4
+    ]
+  },
+  {
+    "name": "Microchip Roller",
+    "to": [
+      687,
+      4
+    ]
+  },
+  {
+    "name": "Dynamic Roller",
+    "to": [
+      704,
+      4
+    ]
+  },
+  {
+    "name": "Negative Virtual Roller",
+    "to": [
+      723,
+      4
+    ]
+  },
+  {
+    "name": "Donut Roller",
+    "to": [
+      777,
+      4
+    ]
+  },
+  {
+    "name": "Sunset Roller",
+    "to": [
+      833,
+      4
+    ]
+  },
+  {
+    "name": "Oreo Roller",
+    "to": [
+      890,
+      4
+    ]
+  },
+  {
+    "name": "Starfish Roller",
+    "to": [
+      914,
+      4
+    ]
+  },
+  {
+    "name": "Monster Roller",
+    "to": [
+      982,
+      4
+    ]
+  },
+  {
+    "name": "Chinese Roller",
+    "to": [
+      1011,
+      4
+    ]
+  },
+  {
+    "name": "Horizon Roller",
+    "to": [
+      1017,
+      4
+    ]
+  },
+  {
+    "name": "Chess Roller",
+    "to": [
+      1067,
+      4
+    ]
+  },
+  {
+    "name": "Security Roller",
+    "to": [
+      1080,
+      4
+    ]
+  },
+  {
+    "name": "Seashell Roller",
+    "to": [
+      1101,
+      4
+    ]
+  },
+  {
+    "name": "Protogen Cat Roller",
+    "to": [
+      1123,
+      4
+    ]
+  },
+  {
+    "name": "Jurassic Roller",
+    "to": [
+      1147,
+      4
+    ]
+  },
+  {
+    "name": "Lov-E Roller",
+    "to": [
+      1198,
+      4
+    ]
+  },
+  {
+    "name": "Sakura Roller",
+    "to": [
+      1214,
+      4
+    ]
+  },
+  {
+    "name": "Flower Roller",
+    "to": [
+      1259,
+      4
+    ]
+  },
+  {
+    "name": "Loudspeaker Roller",
+    "to": [
+      1283,
+      4
+    ]
+  },
+  {
+    "name": "Mecha Roller",
+    "to": [
+      1309,
+      4
+    ]
+  },
+  {
+    "name": "Comedy Tragedy Roller",
+    "to": [
+      1328,
+      4
+    ]
+  },
+  {
+    "name": "Sundial Roller",
+    "to": [
+      1354,
+      4
+    ]
+  },
+  {
+    "name": "Moondial Roller",
+    "to": [
+      1355,
+      4
+    ]
+  },
+  {
+    "name": "Frozen Roller",
+    "to": [
+      1382,
+      4
+    ]
+  },
+  {
+    "name": "Competition Roller",
+    "to": [
+      1410,
+      4
+    ]
+  },
+  {
+    "name": "Toy Roller",
+    "to": [
+      1437,
+      4
+    ]
+  },
+  {
+    "name": "Yarn Roller",
+    "to": [
+      1457,
+      4
+    ]
+  },
+  {
+    "name": "Brazilian Roller",
+    "to": [
+      1491,
+      4
+    ]
+  },
+  {
+    "name": "Chronos Roller",
+    "to": [
+      1519,
+      4
+    ]
+  },
+  {
+    "name": "Rose Roller",
+    "to": [
+      1541,
+      4
+    ]
+  },
+  {
+    "name": "Cogwheel Roller",
+    "to": [
+      1571,
+      4
+    ]
+  },
+  {
+    "name": "Nuclear Roller",
+    "to": [
+      1589,
+      4
+    ]
+  },
+  {
+    "name": "Digital Roller",
+    "to": [
+      1610,
+      4
+    ]
+  },
+  {
+    "name": "Medieval Roller",
+    "to": [
+      1635,
+      4
+    ]
+  },
+  {
+    "name": "Starlight Roller",
+    "to": [
+      1654,
+      4
+    ]
+  },
+  {
+    "name": "Arabian Roller",
+    "to": [
+      1673,
+      4
+    ]
+  },
+  {
+    "name": "Barrel Roller",
+    "to": [
+      1700,
+      4
+    ]
+  },
+  {
+    "name": "Parade Roller",
+    "to": [
+      1728,
+      4
+    ]
+  },
+  {
+    "name": "Heart Roller",
+    "to": [
+      1749,
+      4
+    ]
+  },
+  {
+    "name": "Radiant Roller",
+    "to": [
+      1766,
+      4
+    ]
+  },
+  {
+    "name": "Industrial Roller",
+    "to": [
+      1785,
+      4
+    ]
+  },
+  {
+    "name": "Log Roller",
+    "to": [
+      1798,
+      4
+    ]
+  },
+  {
+    "name": "Pixelated Roller",
+    "to": [
+      1814,
+      4
+    ]
+  },
+  {
+    "name": "Fruity Roller",
+    "to": [
+      1869,
+      4
+    ]
+  },
+  {
+    "name": "Pipeline Roller",
+    "to": [
+      1891,
+      4
+    ]
+  },
+  {
+    "name": "Canyon Roller",
+    "to": [
+      1917,
+      4
+    ]
+  },
+  {
+    "name": "Genesis Roller",
+    "to": [
+      1934,
+      4
+    ]
+  },
+  {
+    "name": "Pearl Roller",
+    "to": [
+      1950,
+      4
+    ]
+  },
+  {
+    "name": "Virus Roller",
+    "to": [
+      1972,
+      4
+    ]
+  },
+  {
+    "name": "Fish Roller",
+    "to": [
+      1985,
+      4
+    ]
+  },
+  {
+    "name": "Native Roller",
+    "to": [
+      2009,
+      4
+    ]
+  },
+  {
+    "name": "Marine Roller",
+    "to": [
+      2037,
+      4
+    ]
+  },
+  {
+    "name": "Lifeguard Ring Roller",
+    "to": [
+      2038,
+      4
+    ]
+  },
+  {
+    "name": "Axolotl Roller",
+    "to": [
+      2055,
+      4
+    ]
+  },
+  {
+    "name": "Russian Roller",
+    "to": [
+      2077,
+      4
+    ]
+  },
+  {
+    "name": "Game Spinner Roller",
+    "to": [
+      2089,
+      4
+    ]
+  },
+  {
+    "name": "Racing Roller",
+    "to": [
+      2116,
+      4
+    ]
+  },
+  {
+    "name": "Washer Roller",
+    "to": [
+      2137,
+      4
+    ]
+  },
+  {
+    "name": "'2' Roller",
+    "to": [
+      2193,
+      4
+    ]
+  },
+  {
+    "name": "Eye Roller",
+    "to": [
+      2203,
+      4
+    ]
+  },
+  {
+    "name": "Atomic Roller",
+    "to": [
+      2252,
+      4
+    ]
+  },
+  {
+    "name": "'10' Roller",
+    "to": [
+      2300,
+      4
+    ]
+  }
+]

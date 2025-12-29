@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Default",
+    "to": [
+      66,
+      4
+    ]
+  },
+    {
+    "name": "Flood Disco Light",
+    "to": [
+      67,
+      4
+    ]
+  }
+]

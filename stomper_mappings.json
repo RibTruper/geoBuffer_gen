@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Default",
+    "to": [
+      20,
+      4
+    ]
+  },
+    {
+    "name": "Chiseled Stomper",
+    "to": [
+      153,
+      4
+    ]
+  },
+    {
+    "name": "Pixelated Stomper",
+    "to": [
+      1829,
+      4
+    ]
+  }
+]

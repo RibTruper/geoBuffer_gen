@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Rolling Sky GeoBuffer Generator (Tool)</title>
+<style>
+  body{font-family:Inter,Arial,Helvetica,sans-serif;background:#f3f4f6;padding:20px}
+  .container{max-width:980px;margin:18px auto;background:#fff;padding:18px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+  label{display:block;margin-top:12px;font-weight:600}
+  input[type=text],input[type=number],select{padding:8px;border-radius:6px;border:1px solid #d1d5db;width:320px}
+  .row{display:flex;gap:12px;align-items:center;margin-top:8px}
+  .small{font-size:0.9rem;color:#374151}
+  button{margin-top:18px;padding:10px 14px;border-radius:8px;background:#16a34a;color:#fff;border:0;cursor:pointer}
+  button.secondary{background:#2563eb}
+  pre{background:#0f172a;color:#e6eef8;padding:12px;border-radius:6px;overflow:auto}
+  .status{margin-top:10px;padding:10px;border-radius:6px;background:#eef2ff;color:#1e293b}
+  .hidden{display:none}
+  .group-area{border-top:1px solid #e6e9ee;margin-top:14px;padding-top:12px}
+  .file-input-inline{display:inline-block}
+  .hint{font-size:0.85rem;color:#6b7280}
+  .controls{display:flex;gap:8px;align-items:center}
+  .disabled{opacity:0.5;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1> Rolling Sky GeoBuffer Generator (Tool)</h1>
+  <p class="small">This page generates a geoBuffer file from a level.txt file. <br> 
+    For more explanation about geoBuffers, check this page - <a href="https://docs.google.com/spreadsheets/d/1a7mPDGtVoXU9s9Bemxu75MpeK22xGXL5nn1u6V38dSE/edit?usp=sharing" target="_blank">RS Editor Help - Hugo</a>.<br>
+  </p>
+
+  <h5><b>Last Update: TiMe-mory</b></h5>
+
+  <label for="levelFile">Level Data File (.txt)</label>
+  <input type="file" id="levelFile" accept=".txt" />
+
+  <label for="outputName">Output File Name</label>
+  <input type="text" id="outputName" value="geoBuffer.txt" />
+
+  <label for="chunkSize">Sliding Window Size (rows)</label>
+  <input type="number" id="chunkSize" value="200" min="1"/>
+
+  <div class="row">
+    <label style="margin:0"><input type="checkbox" id="addGeo0" /> Add GeoBuffer0 preset</label>
+  </div>
+
+  <div class="group-area">
+    <h3>Exception Obstacles <i>(WARNING: Some of them need to be configured on theme settings or else they wont load)</i></h3>
+    <p class="small">This will change the geobuffers depending on the options you choose.<br> 
+    (e.g. you are making a level on Monster City theme, you will change the roller to Monster Roller to load that geobuffer).<br>
+    or you might as well choose the default settings and change it yourself as you'd like.</p>
+
+    <div id="groupsContainer"></div>
+  </div>
+
+  <div style="margin-top:12px" class="controls">
+    <button id="analyzeBtn">Analyze & Preview</button>
+    <button id="downloadBtn" class="secondary disabled" title="Generate preview first">Download GeoBuffer</button>
+    <button class="secondary" id="togglePreview">Toggle Preview</button>
+  </div>
+
+  <div id="status" class="status hidden"></div>
+  <hr>
+  <h3 style="margin-top:20px">Preview</h3>
+  <p class="small">It can only be load when downloaded the geoBuffer file.</p>
+  <pre id="preview" class="hidden"></pre>
+</div>
+
+<script>
+// ==================== CONFIG (edit ids or add groups here) ====================
+const GROUPS = [
+    { key: "roller", name: "Roller", file: "roller_mappings.json", ids: [41,42,43,44,579,580,587,588] },
+    { key: "riser",  name: "Riser",  file: "riser_mappings.json",  ids: [21,22,23,24,25,26] },
+    { key: "stomper",name: "Stomper",file: "stomper_mappings.json",ids: [9,10,11,12,2037] },
+    { key: "air_spike",name: "Air Spike",file: "air_spike_mappings.json",ids: [45,46,47] },
+    { key: "laser",name: "Laser Canon",file: "laser_mappings.json",ids: [165,166,167,168,440,595,1773] },
+    { key: "light",name: "Spotlight",file: "light_mappings.json",ids: [161,162,163,164,1218,1219,1220] },
+    { key: "hammer",name: "Hammer/Slasher",file: "hammer_mappings.json",ids: [105,106,107,108,113,114,115,116] },
+    { key: "spinning_hammer",name: "Spinning Hammer",file: "shammer_mappings.json",ids: [101,102,103,104,109,110,111,112,2023,2024] },
+    { key: "trees", name: "Towers/Trees", file: "trees_mappings.json", ids: [29,30,31,32] },
+    { key: "archway", name: "Archway", file: "arch_mappings.json", ids: [51,52,53,54] },
+    { key: "block_lr", name: "Block ↔️", file: "block_mappings.json", ids: [89,90,91,92] },
+    { key: "block_up", name: "Block 🔼", file: "block_up_mappings.json", ids: [141,142,143,144,145,146,147,148,169,441,442,445,446] },
+    { key: "block_d", name: "Block 🔽", file: "block_down_mappings.json", ids: [80] },
+    { key: "pillar", name: "Pillar Laser", file: "pillar_mappings.json", ids: [149] },
+    { key: "radio", name: "Radio Tower", file: "radio_mappings.json", ids: [49,50] },
+    { key: "semi", name: "Semi-Jump Pad", file: "semi_mappings.json", ids: [397] },
+    { key: "hand", name: "Skeleton Hand", file: "hand_mappings.json", ids: [194] },
+    { key: "panda", name: "Panda", file: "panda_mappings.json", ids: [241] },
+    { key: "gblock", name: "Glitchy Block", file: "gblock_mappings.json", ids: [267,622] },
+    { key: "js", name: "Joker Statue", file: "js_mappings.json", ids: [294] },
+    { key: "rpg", name: "Poker Guard (➡️)", file: "rpg_mappings.json", ids: [305] },
+    { key: "lpg", name: "Poker Guard (⬅️)", file: "lpg_mappings.json", ids: [306] },
+    { key: "cubes", name: "Cube (Spread Out)", file: "cubes_mappings.json", ids: [309] },
+    { key: "cubec", name: "Cube (Clustered)", file: "cubec_mappings.json", ids: [310] },
+    { key: "bounce", name: "Bounce Plate", file: "bounce_mappings.json", ids: [352] },
+    { key: "sac", name: "Small Anniversary Cake", file: "sac_mappings.json", ids: [906] },
+    { key: "pyramid", name: "Radar Pyramid", file: "pyramid_mappings.json", ids: [528,1384,1385] },
+    { key: "light_cube", name: "Light Cube (Single)", file: "light_cube_mappings.json", ids: [522,541,542,543,544] },
+    { key: "archwayl", name: "Archway Lifting (If you want the Horizon Archway)", file: "archl_mappings.json", ids: [51,52] },
+    { key: "archwayc", name: "Archway Closing (If you want the Horizon Archway)", file: "archc_mappings.json", ids: [53,54] }
+];
+
+const PRESET_GEOBUFFER0 = [
+    [0,0,100],[1,0,20],[2,0,15],[3,0,12],[4,0,5],[5,0,10],[6,0,80],[7,0,15],[8,0,10],[9,0,15],
+    [10,0,45],[11,0,30],[12,0,90],[13,0,70],[14,0,120],[30,4,10],[44,4,20],[62,4,5],[64,4,10],
+    [70,2,10],[71,2,2],[72,2,10],[73,2,15],[77,5,40],[78,5,50],[80,9,60],[81,9,60],
+    [82,9,45],[83,9,45],[84,9,20],[85,9,20],[86,9,60],[87,9,40],[88,9,10],[89,9,40],
+    [90,9,40],[91,9,40],[92,9,40],[93,9,40],[94,9,40],[95,9,40],[96,9,40],[97,9,40],
+    [98,9,40],[99,9,40],[100,9,40],[101,8,650],[103,10,1],[104,10,2],[105,6,1],[107,10,1],
+    [108,6,1],[109,6,1],[112,1,60],[114,10,50],[217,6,10],[218,6,3],[233,9,40],[364,10,1]
+];
+
+// ============================================================================
+
+const state = {
+  conversionMap: {},        // { idNumber: [x,y] }
+  groupMappings: {},        // { groupKey: { name: [x,y], ... } }
+  groupSelections: {},      // { groupKey: selectedName }
+  levelIds: new Set(),      // ids found in the uploaded level.txt
+  cachedGroupData: {},      // raw JSON for groups when fetched
+};
+
+const statusEl = document.getElementById('status');
+const previewEl = document.getElementById('preview');
+const analyzeBtn = document.getElementById('analyzeBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+const togglePreviewBtn = document.getElementById('togglePreview');
+
+function showStatus(msg, hideAfterMs) {
+  statusEl.textContent = msg;
+  statusEl.classList.remove('hidden');
+  if (hideAfterMs) setTimeout(() => statusEl.classList.add('hidden'), hideAfterMs);
+}
+
+function hideStatus(){ statusEl.classList.add('hidden'); }
+
+async function tryFetchJSON(path) {
+  try {
+    const res = await fetch(path);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return await res.json();
+  } catch (err) {
+    return null;
+  }
+}
+
+function applyConversionJSON(data) {
+  if (!Array.isArray(data)) return;
+  data.forEach(entry => {
+    if (!Array.isArray(entry.ids) || !Array.isArray(entry.to)) return;
+    entry.ids.forEach(id => {
+      state.conversionMap[String(id)] = [Number(entry.to[0]), Number(entry.to[1])];
+    });
+  });
+}
+
+function clearGroupsUI() {
+  document.getElementById('groupsContainer').innerHTML = '';
+}
+
+function createGroupElement(group) {
+  const wrap = document.createElement('div');
+  wrap.style.marginTop = '10px';
+  wrap.id = 'wrap_' + group.key;
+
+  const label = document.createElement('label');
+  label.textContent = group.name + ' - Tiles: (' + group.ids + ')';
+  wrap.appendChild(label);
+
+  const select = document.createElement('select');
+  select.id = 'sel_' + group.key;
+  select.style.width = '320px';
+  wrap.appendChild(select);
+
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = '.json';
+  fileInput.className = 'file-input-inline hidden';
+  fileInput.id = 'file_' + group.key;
+  wrap.appendChild(fileInput);
+
+  fileInput.addEventListener('change', async (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    try {
+      const txt = await f.text();
+      const data = JSON.parse(txt);
+      populateGroupFromData(group, data);
+      showStatus(`Loaded ${f.name} for ${group.name}`, 3000);
+    } catch (err) { alert('Failed to parse JSON: ' + err); }
+  });
+
+  return wrap;
+}
+
+function populateGroupFromData(group, data) {
+  const sel = document.getElementById('sel_' + group.key);
+  sel.innerHTML = '';
+  if (!Array.isArray(data)) return;
+  state.cachedGroupData[group.key] = data;
+  state.groupMappings[group.key] = {};
+  data.forEach(entry => {
+    if (!entry.name || !Array.isArray(entry.to) || entry.to.length < 2) return;
+    state.groupMappings[group.key][entry.name] = [Number(entry.to[0]), Number(entry.to[1])];
+    const opt = document.createElement('option'); opt.value = entry.name; opt.textContent = entry.name; sel.appendChild(opt);
+  });
+  if (sel.options.length > 0) {
+    sel.selectedIndex = 0;
+    state.groupSelections[group.key] = sel.value;
+    sel.addEventListener('change', () => { state.groupSelections[group.key] = sel.value; });
+    // apply mapping immediately so conversionMap reflects selection
+    applyGroupMapping(group);
+  }
+}
+
+function applyGroupMapping(group) {
+  const name = state.groupSelections[group.key] || (document.getElementById('sel_' + group.key)?.value);
+  const mapping = state.groupMappings[group.key] ? state.groupMappings[group.key][name] : null;
+  if (!mapping || !Array.isArray(mapping)) return;
+  group.ids.forEach(id => { state.conversionMap[String(id)] = [Number(mapping[0]), Number(mapping[1])]; });
+}
+
+function parseLevelFile(text) {
+  const lines = text.split(/\r?\n/);
+  let dataStarted = false;
+  const rows = [];
+  const idsSet = new Set();
+  for (let raw of lines) {
+    const s = raw.trim();
+    if (!s) continue;
+    if (s.toLowerCase().startsWith('data=')) { dataStarted = true; continue; }
+    if (dataStarted || s.includes(',')) {
+      const parts = s.replace(/,$/, '').split(',').map(p => p.trim()).filter(p => p !== '');
+      if (parts.length !== 5) continue;
+      const vals = parts.map(v => Number(v));
+      if (vals.some(v => Number.isNaN(v))) continue;
+      rows.push(vals);
+      vals.forEach(v => idsSet.add(v));
+    }
+  }
+  return { rows, idsSet };
+}
+
+function analyzeChunks(rows, chunkSize, convMap) {
+  const maxCounts = {};
+  Object.keys(convMap).forEach(k => maxCounts[k] = 0);
+  const total = rows.length;
+  if (total === 0) return maxCounts;
+  if (total < chunkSize) {
+    // fallback: analyze with full rows as single window (more useful for small levels)
+    const freq = {};
+    for (const row of rows) for (const item of row) if (convMap[String(item)] !== undefined) freq[item] = (freq[item]||0)+1;
+    for (const [item, count] of Object.entries(freq)) maxCounts[item] = Math.max(maxCounts[item], count);
+    return maxCounts;
+  }
+  for (let start = 0; start <= total - chunkSize; start++) {
+    const window = rows.slice(start, start + chunkSize);
+    const freq = {};
+    for (const row of window) for (const item of row) if (convMap[String(item)] !== undefined) freq[item] = (freq[item]||0)+1;
+    for (const [item, count] of Object.entries(freq)) if (count > maxCounts[item]) maxCounts[item] = count;
+  }
+  return maxCounts;
+}
+
+function generateGeoBufferList(convMap, maxCounts) {
+  const geo = {};
+  for (const [id, xy] of Object.entries(convMap)) {
+    const count = maxCounts[id] || 0;
+    if (count > 0) {
+      const x = Number(xy[0]), y = Number(xy[1]);
+      const key = `${x},${y}`;
+      geo[key] = (geo[key] || 0) + count;
+    }
+  }
+  const list = Object.entries(geo).map(([k,v]) => { const [x,y] = k.split(',').map(Number); return [x,y,v]; });
+  list.sort((a,b) => a[0]-b[0]);
+  return list;
+}
+
+function downloadFile(filename, text) {
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+}
+
+// When a level file is selected: parse it and show only relevant groups
+document.getElementById('levelFile').addEventListener('change', async (e) => {
+  hideStatus();
+  clearGroupsUI();
+  state.levelIds = new Set();
+  const f = e.target.files[0];
+  if (!f) return;
+  const txt = await f.text();
+  const { rows, idsSet } = parseLevelFile(txt);
+  state.levelIds = idsSet;
+
+  // show which groups are relevant
+  const container = document.getElementById('groupsContainer');
+  let anyRelevant = false;
+  for (const g of GROUPS) {
+    const intersect = Array.from(idsSet).some(id => g.ids.includes(id));
+    if (intersect) {
+      anyRelevant = true;
+      const el = createGroupElement(g);
+      container.appendChild(el);
+      // try to auto-load mapping file for this group
+      const data = await tryFetchJSON(g.file);
+      if (data) {
+        populateGroupFromData(g, data);
+        // if conversionMap doesn't yet have an entry for these ids, apply default mapping
+        applyGroupMapping(g);
+      } else {
+        // show upload control
+        const fi = document.getElementById('file_' + g.key);
+        if (fi) fi.classList.remove('hidden');
+        showStatus(`Mapping file ${g.file} not auto-loaded. You can upload it for ${g.name}.`, 5000);
+      }
+    }
+  }
+  if (!anyRelevant) showStatus('No known exception group IDs detected in level file. You may still generate geoBuffer with default conversion_map.json.', 5000);
+});
+
+// Analyze & Preview (does not auto-download)
+document.getElementById('analyzeBtn').addEventListener('click', async () => {
+  hideStatus();
+  previewEl.classList.add('hidden');
+  previewEl.textContent = '';
+  downloadBtn.classList.add('disabled');
+
+  const fileInput = document.getElementById('levelFile');
+  if (!fileInput.files || fileInput.files.length === 0) return alert('Please select a level .txt file');
+  const f = fileInput.files[0];
+  const txt = await f.text();
+  const { rows } = parseLevelFile(txt);
+  if (!rows.length) return alert('No valid level rows parsed from that file.');
+
+  // Ensure base conversion_map.json is loaded (try fetch or ask upload)
+  if (Object.keys(state.conversionMap).length === 0) {
+    const conv = await tryFetchJSON('conversion_map.json');
+    if (conv) { applyConversionJSON(conv); showStatus('Loaded conversion_map.json automatically', 2000); }
+    else showStatus('conversion_map.json not auto-loaded. If exceptions are missing mappings, upload them via their group controls.', 4000);
+  }
+
+  // apply currently selected group mappings
+  for (const g of GROUPS) {
+    if (state.groupSelections[g.key] || document.getElementById('sel_' + g.key)) applyGroupMapping(g);
+  }
+
+  const chunkSize = Number(document.getElementById('chunkSize').value) || 200;
+  const maxCounts = analyzeChunks(rows, chunkSize, state.conversionMap);
+  let geo = generateGeoBufferList(state.conversionMap, maxCounts);
+  if (document.getElementById('addGeo0').checked) geo = PRESET_GEOBUFFER0.concat(geo);
+
+  if (geo.length === 0) { alert('No matching item IDs were found in the level data (after mapping).'); return; }
+
+  const textOut = geo.map(r => r.join(',')).join('\n');
+  previewEl.textContent = textOut;
+  previewEl.classList.remove('hidden');
+  downloadBtn.classList.remove('disabled');
+  showStatus('Preview generated. Press Download GeoBuffer to save the file.', 4000);
+});
+
+// Download button behavior (uses preview content)
+downloadBtn.addEventListener('click', () => {
+  if (downloadBtn.classList.contains('disabled')) return;
+  const outName = (document.getElementById('outputName').value || 'geoBuffer.txt').trim();
+  const textOut = previewEl.textContent || '';
+  if (!textOut) return alert('No preview available. Generate preview first.');
+  downloadFile(outName, textOut);
+  showStatus('GeoBuffer file downloaded: ' + outName, 4000);
+});
+
+// Toggle preview visibility
+togglePreviewBtn.addEventListener('click', () => {
+  if (previewEl.classList.contains('hidden')) { previewEl.classList.remove('hidden'); togglePreviewBtn.textContent = 'Hide Preview'; }
+  else { previewEl.classList.add('hidden'); togglePreviewBtn.textContent = 'Toggle Preview'; }
+});
+
+// Attempt to pre-load conversion_map.json silently (useful when HTML served via http)
+(async function preLoadConversion(){
+  const conv = await tryFetchJSON('conversion_map.json');
+  if (conv) applyConversionJSON(conv);
+})();
+
+</script>
+</body>
+</html>

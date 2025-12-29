@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Default",
+    "to": [
+      32,
+      4
+    ]
+  },
+    {
+    "name": "Horizon Archway (Lifting)",
+    "to": [
+      1022,
+      4
+    ]
+  }
+]

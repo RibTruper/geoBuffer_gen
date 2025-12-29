@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Hammer Default",
+    "to": [
+      21,
+      4
+    ]
+  },
+    {
+    "name": "Default Slasher",
+    "to": [
+      22,
+      4
+    ]
+  },
+    {
+    "name": "Christmas Slasher",
+    "to": [
+      205,
+      4
+    ]
+  },
+    {
+    "name": "Meter Ruler Slasher",
+    "to": [
+      1455,
+      4
+    ]
+  }
+]

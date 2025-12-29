@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Default",
+    "to": [
+      60,
+      4
+    ]
+  },
+    {
+    "name": "Space Radio Tower",
+    "to": [
+      179,
+      4
+    ]
+  },
+    {
+    "name": "Christmas Radio Tower",
+    "to": [
+      204,
+      4
+    ]
+  }
+]

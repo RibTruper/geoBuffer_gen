@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Default",
+    "to": [
+      369,
+      4
+    ]
+  },
+    {
+    "name": "Chinese Semi-Jump Pad",
+    "to": [
+      1012,
+      4
+    ]
+  },
+    {
+    "name": "Jurassic Semi-Jump Pad",
+    "to": [
+      1156,
+      4
+    ]
+  }
+]

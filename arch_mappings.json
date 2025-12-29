@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Default",
+    "to": [
+      32,
+      4
+    ]
+  },
+    {
+    "name": "Tetris Archway A",
+    "to": [
+      41,
+      4
+    ]
+  },
+    {
+    "name": "Tetris Archway B",
+    "to": [
+      45,
+      4
+    ]
+  },
+    {
+    "name": "Chiseled Archway",
+    "to": [
+      154,
+      4
+    ]
+  },
+    {
+    "name": "Space Archway",
+    "to": [
+      181,
+      4
+    ]
+  },
+    {
+    "name": "Kung Fu Archway",
+    "to": [
+      215,
+      4
+    ]
+  }
+]
